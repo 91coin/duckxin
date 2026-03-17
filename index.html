@@ -1,773 +1,1134 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🦆 Duck馨找不同 - 色彩敏感度测试</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>济仁堂中医诊所 — 传承千年医道，守护百姓健康</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+<script>
+tailwind.config={theme:{extend:{colors:{vermillion:'#8B2500',vermillion2:'#A63D2B',ink:'#2D5A3D',ink2:'#1a3a26',parchment:'#FBF7F0',parchment2:'#F5EDE0',gold:'#C5A55A',gold2:'#D4B96E',warmgray:'#8C7B6B',darkwood:'#3E2723',cream:'#FAF6EE'},fontFamily:{serif:['Noto Serif SC','serif'],sans:['Noto Sans SC','sans-serif'],brush:['Ma Shan Zheng','cursive']}}}}
+</script>
+<!-- STYLES PLACEHOLDER -->
+<style>
+/* === BASE === */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{font-family:'Noto Sans SC',sans-serif;background:#FBF7F0;color:#3E2723;overflow-x:hidden}
+::selection{background:#C5A55A;color:#fff}
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:#F5EDE0}
+::-webkit-scrollbar-thumb{background:#C5A55A;border-radius:4px}
 
-        :root {
-            --primary: #FFD93D;
-            --secondary: #6BCB77;
-            --accent: #FF6B6B;
-            --dark: #4D96FF;
-            --bg: #FFF5E6;
-            --text: #2C3E50;
-        }
+/* === DECORATIVE PATTERNS === */
+.cloud-pattern{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='60' viewBox='0 0 120 60'%3E%3Cpath d='M30 40c0-11 9-20 20-20 8 0 15 5 18 12 2-1 4-2 7-2 8 0 15 7 15 15s-7 15-15 15H30c-8 0-15-7-15-15 0-7 5-13 12-14.5' fill='none' stroke='%23C5A55A' stroke-width='.5' opacity='.15'/%3E%3C/svg%3E");
+}
 
-        body {
-            font-family: 'Nunito', 'Microsoft YaHei', sans-serif;
-            background: linear-gradient(135deg, #FFF5E6 0%, #FFE4C4 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            overflow-x: hidden;
-        }
+/* Chinese lattice border */
+.lattice-border{
+  border-image:repeating-linear-gradient(90deg,#C5A55A 0,#C5A55A 8px,transparent 8px,transparent 16px) 2;
+}
 
-        .game-container {
-            background: white;
-            border-radius: 30px;
-            padding: 30px;
-            box-shadow: 
-                0 20px 60px rgba(0,0,0,0.1),
-                0 0 0 8px rgba(255,255,255,0.5);
-            max-width: 800px;
-            width: 100%;
-            position: relative;
-            overflow: hidden;
-        }
+/* Ink wash effect */
+.ink-wash{
+  background:radial-gradient(ellipse at 20% 80%,rgba(45,90,61,.08) 0%,transparent 50%),
+             radial-gradient(ellipse at 80% 20%,rgba(139,37,0,.05) 0%,transparent 50%),
+             radial-gradient(ellipse at 50% 50%,rgba(197,165,90,.03) 0%,transparent 70%);
+}
 
-        .game-container::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(255,217,61,0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(107,203,119,0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(255,107,107,0.05) 0%, transparent 40%);
-            pointer-events: none;
-        }
+/* Hero mountain silhouette */
+.mountain-bg{
+  position:absolute;bottom:0;left:0;width:100%;height:40%;
+  background:
+    linear-gradient(175deg,transparent 65%,rgba(45,90,61,.06) 65.5%,rgba(45,90,61,.04) 100%),
+    linear-gradient(170deg,transparent 55%,rgba(139,37,0,.04) 55.5%,rgba(139,37,0,.03) 100%),
+    linear-gradient(168deg,transparent 72%,rgba(45,90,61,.03) 72.5%,rgba(45,90,61,.02) 100%);
+  pointer-events:none;
+}
 
-        /* 标题区域 */
-        .header {
-            text-align: center;
-            margin-bottom: 25px;
-            position: relative;
-            z-index: 1;
-        }
+/* Floating clouds */
+@keyframes floatCloud{
+  0%{transform:translateX(-10%) translateY(0)}
+  50%{transform:translateX(5%) translateY(-15px)}
+  100%{transform:translateX(-10%) translateY(0)}
+}
+@keyframes floatCloud2{
+  0%{transform:translateX(10%) translateY(0)}
+  50%{transform:translateX(-5%) translateY(-20px)}
+  100%{transform:translateX(10%) translateY(0)}
+}
+.cloud-float{animation:floatCloud 20s ease-in-out infinite}
+.cloud-float-2{animation:floatCloud2 25s ease-in-out infinite;animation-delay:-8s}
 
-        .duck-icon {
-            font-size: 60px;
-            margin-bottom: 10px;
-            animation: float 3s ease-in-out infinite;
-            display: inline-block;
-        }
+/* Ink drip animation */
+@keyframes inkDrip{
+  0%{transform:scaleY(0);opacity:0}
+  50%{opacity:.6}
+  100%{transform:scaleY(1);opacity:0}
+}
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(-5deg); }
-            50% { transform: translateY(-10px) rotate(5deg); }
-        }
+/* Leaf float */
+@keyframes leafFloat{
+  0%{transform:translateY(0) rotate(0deg);opacity:.7}
+  25%{transform:translateY(-20px) rotate(15deg) translateX(10px)}
+  50%{transform:translateY(-5px) rotate(-5deg) translateX(-5px)}
+  75%{transform:translateY(-25px) rotate(10deg) translateX(15px)}
+  100%{transform:translateY(0) rotate(0deg);opacity:.7}
+}
 
-        h1 {
-            font-size: 36px;
-            color: var(--text);
-            margin-bottom: 5px;
-            font-weight: 800;
-        }
+/* Section divider wave */
+.wave-divider{
+  height:60px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 60'%3E%3Cpath d='M0 30 Q150 0 300 30 T600 30 T900 30 T1200 30 V60 H0Z' fill='%23FBF7F0'/%3E%3C/svg%3E") no-repeat center;
+  background-size:cover;
+  margin-top:-1px;
+}
+.wave-divider-ink{
+  height:60px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 60'%3E%3Cpath d='M0 30 Q150 0 300 30 T600 30 T900 30 T1200 30 V60 H0Z' fill='%232D5A3D'/%3E%3C/svg%3E") no-repeat center;
+  background-size:cover;
+  margin-top:-1px;
+}
 
-        .subtitle {
-            color: #888;
-            font-size: 16px;
-        }
+/* Reveal animation */
+.reveal{opacity:0;transform:translateY(40px);transition:all .8s cubic-bezier(.23,1,.32,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-left{opacity:0;transform:translateX(-40px);transition:all .8s cubic-bezier(.23,1,.32,1)}
+.reveal-left.visible{opacity:1;transform:translateX(0)}
+.reveal-right{opacity:0;transform:translateX(40px);transition:all .8s cubic-bezier(.23,1,.32,1)}
+.reveal-right.visible{opacity:1;transform:translateX(0)}
+.reveal-scale{opacity:0;transform:scale(.9);transition:all .7s cubic-bezier(.23,1,.32,1)}
+.reveal-scale.visible{opacity:1;transform:scale(1)}
 
-        /* 游戏信息栏 */
-        .game-info {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 25px;
-            padding: 15px;
-            background: linear-gradient(135deg, var(--primary) 0%, #FFE066 100%);
-            border-radius: 20px;
-            position: relative;
-            z-index: 1;
-        }
+/* Gold ornament line */
+.gold-line{height:2px;background:linear-gradient(90deg,transparent,#C5A55A,transparent);margin:0 auto}
 
-        .info-item {
-            text-align: center;
-        }
+/* Card hover lift */
+.card-lift{transition:all .4s cubic-bezier(.23,1,.32,1)}
+.card-lift:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(62,39,35,.12)}
 
-        .info-label {
-            font-size: 12px;
-            color: rgba(0,0,0,0.6);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+/* Stamp seal */
+.seal{
+  width:64px;height:64px;border:3px solid #8B2500;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Ma Shan Zheng',cursive;color:#8B2500;font-size:1.4rem;
+  transform:rotate(-8deg);position:relative;line-height:1.1;
+}
+.seal::after{
+  content:'';position:absolute;inset:3px;border:1px solid rgba(139,37,0,.3);border-radius:4px;
+}
 
-        .info-value {
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--text);
-        }
+/* Traditional corner ornaments */
+.corner-ornament{position:relative}
+.corner-ornament::before,.corner-ornament::after{
+  content:'';position:absolute;width:24px;height:24px;
+  border-color:#C5A55A;border-style:solid;opacity:.5;
+}
+.corner-ornament::before{top:0;left:0;border-width:2px 0 0 2px}
+.corner-ornament::after{bottom:0;right:0;border-width:0 2px 2px 0}
 
-        /* 游戏区域 */
-        .game-board {
-            display: grid;
-            gap: 12px;
-            margin-bottom: 25px;
-            justify-content: center;
-            position: relative;
-            z-index: 1;
-            padding: 20px;
-            background: rgba(255,255,255,0.5);
-            border-radius: 20px;
-        }
+/* Pulsing dot for online status */
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.pulse-dot{animation:pulse 2s ease-in-out infinite}
 
-        .color-cell {
-            width: 80px;
-            height: 80px;
-            border-radius: 16px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            position: relative;
-            box-shadow: 
-                0 4px 15px rgba(0,0,0,0.1),
-                inset 0 2px 4px rgba(255,255,255,0.3);
-            border: 3px solid transparent;
-        }
+/* Nav mobile menu */
+.mobile-menu{
+  max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.23,1,.32,1);
+}
+.mobile-menu.open{max-height:500px}
 
-        .color-cell:hover {
-            transform: scale(1.08) rotate(2deg);
-            box-shadow: 
-                0 8px 25px rgba(0,0,0,0.15),
-                inset 0 2px 4px rgba(255,255,255,0.3);
-        }
+/* Form focus ring */
+input:focus,select:focus,textarea:focus{
+  outline:none;border-color:#C5A55A !important;
+  box-shadow:0 0 0 3px rgba(197,165,90,.2);
+}
 
-        .color-cell.correct {
-            animation: correctPop 0.5s ease;
-            border-color: var(--secondary);
-        }
+/* Testimonial card subtle bg */
+.testimonial-bg{
+  background:linear-gradient(135deg,rgba(197,165,90,.04),rgba(45,90,61,.04));
+}
 
-        .color-cell.wrong {
-            animation: wrongShake 0.5s ease;
-            border-color: var(--accent);
-        }
+/* Doctor photo placeholder */
+.doctor-photo{
+  background:linear-gradient(135deg,#E8DCC8,#D4C4A8);
+  position:relative;overflow:hidden;
+}
+.doctor-photo::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 35%,rgba(139,37,0,.08) 0%,transparent 60%);
+}
 
-        @keyframes correctPop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-        }
+/* Hero subtle grain */
+.grain{
+  position:absolute;inset:0;opacity:.03;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
 
-        @keyframes wrongShake {
-            0%, 100% { transform: translateX(0); }
-            20% { transform: translateX(-10px) rotate(-5deg); }
-            40% { transform: translateX(10px) rotate(5deg); }
-            60% { transform: translateX(-10px) rotate(-5deg); }
-            80% { transform: translateX(10px) rotate(5deg); }
-        }
+/* Toast */
+.toast{
+  position:fixed;top:100px;left:50%;transform:translateX(-50%) translateY(-20px);
+  opacity:0;transition:all .4s ease;z-index:9999;pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-        /* 进度条 */
-        .progress-bar {
-            width: 100%;
-            height: 12px;
-            background: rgba(0,0,0,0.1);
-            border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 20px;
-            position: relative;
-            z-index: 1;
-        }
+/* Back to top */
+#backTop{
+  position:fixed;bottom:30px;right:30px;width:48px;height:48px;
+  background:#8B2500;color:#FBF7F0;border:none;border-radius:50%;
+  cursor:pointer;opacity:0;transform:translateY(20px);
+  transition:all .3s ease;z-index:100;font-size:1.2rem;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 15px rgba(139,37,0,.3);
+}
+#backTop.visible{opacity:1;transform:translateY(0)}
+#backTop:hover{background:#A63D2B;transform:translateY(-3px);box-shadow:0 8px 25px rgba(139,37,0,.35)}
 
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--secondary) 0%, var(--dark) 100%);
-            border-radius: 10px;
-            transition: width 0.3s ease;
-            position: relative;
-        }
+/* Article thumbnail placeholder */
+.article-thumb{position:relative;overflow:hidden}
+.article-thumb-1{background:linear-gradient(135deg,#E8DCC8 0%,#C5A55A33 50%,#2D5A3D22 100%)}
+.article-thumb-2{background:linear-gradient(135deg,#2D5A3D15 0%,#C5A55A22 50%,#8B250015 100%)}
+.article-thumb-3{background:linear-gradient(135deg,#8B250010 0%,#E8DCC8 50%,#2D5A3D15 100%)}
 
-        .progress-fill::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            animation: shimmer 2s infinite;
-        }
+/* Map placeholder */
+.map-placeholder{
+  background:linear-gradient(135deg,#E8DCC8,#D4C4A8);
+  position:relative;
+}
+.map-placeholder::before{
+  content:'';position:absolute;inset:0;
+  background:
+    repeating-linear-gradient(0deg,transparent,transparent 40px,rgba(197,165,90,.1) 40px,rgba(197,165,90,.1) 41px),
+    repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(197,165,90,.1) 40px,rgba(197,165,90,.1) 41px);
+}
 
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-
-        /* 控制按钮 */
-        .controls {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            position: relative;
-            z-index: 1;
-        }
-
-        .btn {
-            padding: 15px 30px;
-            border: none;
-            border-radius: 50px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: inherit;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent) 0%, #FF8E8E 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(255,107,107,0.4);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(255,107,107,0.5);
-        }
-
-        .btn-secondary {
-            background: white;
-            color: var(--text);
-            border: 2px solid rgba(0,0,0,0.1);
-        }
-
-        .btn-secondary:hover {
-            background: var(--bg);
-            transform: translateY(-3px);
-        }
-
-        /* 消息提示 */
-        .message {
-            text-align: center;
-            padding: 15px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            font-weight: 600;
-            position: relative;
-            z-index: 1;
-            min-height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .message.success {
-            background: rgba(107,203,119,0.2);
-            color: #2d8a3e;
-        }
-
-        .message.error {
-            background: rgba(255,107,107,0.2);
-            color: #c44545;
-        }
-
-        .message.info {
-            background: rgba(77,150,255,0.2);
-            color: #2a5aa0;
-        }
-
-        /* 开始/结束画面 */
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            backdrop-filter: blur(5px);
-        }
-
-        .modal {
-            background: white;
-            padding: 50px;
-            border-radius: 30px;
-            text-align: center;
-            max-width: 500px;
-            width: 90%;
-            animation: modalPop 0.5s ease;
-        }
-
-        @keyframes modalPop {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .modal h2 {
-            font-size: 36px;
-            margin-bottom: 20px;
-            color: var(--text);
-        }
-
-        .modal p {
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 18px;
-            line-height: 1.6;
-        }
-
-        .final-score {
-            font-size: 72px;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin: 20px 0;
-        }
-
-        .rating {
-            font-size: 48px;
-            margin: 20px 0;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        /* 粒子效果 */
-        .particle {
-            position: fixed;
-            pointer-events: none;
-            animation: particleFloat 1s ease-out forwards;
-            font-size: 24px;
-            z-index: 999;
-        }
-
-        @keyframes particleFloat {
-            0% {
-                transform: translateY(0) scale(1);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100px) scale(0);
-                opacity: 0;
-            }
-        }
-
-        /* 响应式 */
-        @media (max-width: 600px) {
-            .game-container {
-                padding: 20px;
-            }
-
-            h1 {
-                font-size: 28px;
-            }
-
-            .color-cell {
-                width: 60px;
-                height: 60px;
-            }
-
-            .info-value {
-                font-size: 24px;
-            }
-
-            .modal {
-                padding: 30px;
-            }
-
-            .final-score {
-                font-size: 56px;
-            }
-        }
-
-        /* 等级指示器 */
-        .level-indicator {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 20px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .level-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: rgba(0,0,0,0.1);
-            transition: all 0.3s;
-        }
-
-        .level-dot.active {
-            background: var(--primary);
-            transform: scale(1.3);
-            box-shadow: 0 0 10px var(--primary);
-        }
-
-        .level-dot.completed {
-            background: var(--secondary);
-        }
-
-        /* 连击显示 */
-        .combo {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, var(--accent) 0%, #FF8E8E 100%);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-weight: 800;
-            font-size: 18px;
-            animation: comboPulse 0.5s ease;
-            z-index: 10;
-        }
-
-        @keyframes comboPulse {
-            0% { transform: scale(0); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-        }
-
-        .combo.hidden {
-            display: none;
-        }
-    </style>
+@media(max-width:768px){
+  .seal{width:48px;height:48px;font-size:1rem;border-width:2px}
+}
+</style>
 </head>
 <body>
-    <div class="game-container">
-        <div class="header">
-            <div class="duck-icon">🦆</div>
-            <h1>Duck馨找不同</h1>
-            <p class="subtitle">测试你的色彩敏感度 👀🎨</p>
+
+<!-- TOAST -->
+<div id="toast" class="toast bg-ink text-parchment px-6 py-3 rounded-lg shadow-xl font-sans text-sm"></div>
+
+<!-- BACK TO TOP -->
+<button id="backTop" aria-label="返回顶部">
+  <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg>
+</button>
+
+<!-- ============ NAVIGATION ============ -->
+<nav id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-500">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-20">
+      <!-- Logo -->
+      <a href="#hero" class="flex items-center gap-3 group">
+        <div class="seal text-center leading-none">济仁<br>堂</div>
+        <div>
+          <div class="font-brush text-2xl text-vermillion tracking-wider nav-logo-text">济仁堂</div>
+          <div class="text-xs text-warmgray tracking-widest">中医诊所</div>
         </div>
+      </a>
+      <!-- Desktop Nav -->
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#hero" class="nav-link text-sm font-medium tracking-wide hover:text-vermillion transition-colors duration-300">首页</a>
+        <a href="#about" class="nav-link text-sm font-medium tracking-wide hover:text-vermillion transition-colors duration-300">关于我们</a>
+        <a href="#services" class="nav-link text-sm font-medium tracking-wide hover:text-vermillion transition-colors duration-300">诊疗项目</a>
+        <a href="#doctors" class="nav-link text-sm font-medium tracking-wide hover:text-vermillion transition-colors duration-300">名医团队</a>
+        <a href="#articles" class="nav-link text-sm font-medium tracking-wide hover:text-vermillion transition-colors duration-300">养生知识</a>
+        <a href="#appointment" class="bg-vermillion text-parchment px-5 py-2.5 rounded text-sm font-medium tracking-wide hover:bg-vermillion2 transition-all duration-300 hover:shadow-lg hover:shadow-vermillion/20">预约挂号</a>
+      </div>
+      <!-- Mobile hamburger -->
+      <button id="menuBtn" class="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 group" aria-label="菜单">
+        <span class="menu-line w-6 h-0.5 bg-darkwood transition-all duration-300 origin-center"></span>
+        <span class="menu-line w-6 h-0.5 bg-darkwood transition-all duration-300"></span>
+        <span class="menu-line w-4 h-0.5 bg-darkwood transition-all duration-300 origin-center ml-auto"></span>
+      </button>
+    </div>
+  </div>
+  <!-- Mobile menu -->
+  <div id="mobileMenu" class="mobile-menu md:hidden bg-parchment/98 backdrop-blur-md border-t border-gold/10">
+    <div class="px-6 py-4 space-y-1">
+      <a href="#hero" class="block py-3 text-sm font-medium text-darkwood hover:text-vermillion transition-colors border-b border-gold/10">首页</a>
+      <a href="#about" class="block py-3 text-sm font-medium text-darkwood hover:text-vermillion transition-colors border-b border-gold/10">关于我们</a>
+      <a href="#services" class="block py-3 text-sm font-medium text-darkwood hover:text-vermillion transition-colors border-b border-gold/10">诊疗项目</a>
+      <a href="#doctors" class="block py-3 text-sm font-medium text-darkwood hover:text-vermillion transition-colors border-b border-gold/10">名医团队</a>
+      <a href="#articles" class="block py-3 text-sm font-medium text-darkwood hover:text-vermillion transition-colors border-b border-gold/10">养生知识</a>
+      <a href="#contact" class="block py-3 text-sm font-medium text-darkwood hover:text-vermillion transition-colors border-b border-gold/10">联系我们</a>
+      <a href="#appointment" class="block py-3 mt-2 bg-vermillion text-parchment text-center rounded text-sm font-medium">预约挂号</a>
+    </div>
+  </div>
+</nav>
 
-        <div class="level-indicator" id="levelIndicator">
-            <!-- 动态生成 -->
-        </div>
+<!-- ============ HERO ============ -->
+<section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden bg-parchment">
+  <div class="grain"></div>
+  <div class="mountain-bg"></div>
 
-        <div class="game-info">
-            <div class="info-item">
-                <div class="info-label">关卡</div>
-                <div class="info-value" id="level">1</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">得分</div>
-                <div class="info-value" id="score">0</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">时间</div>
-                <div class="info-value" id="time">60</div>
-            </div>
-        </div>
+  <!-- Floating clouds SVG -->
+  <svg class="cloud-float absolute top-[10%] left-[-5%] w-[300px] h-[150px] opacity-[.07]" viewBox="0 0 300 150"><ellipse cx="100" cy="100" rx="80" ry="35" fill="#2D5A3D"/><ellipse cx="170" cy="90" rx="60" ry="30" fill="#2D5A3D"/><ellipse cx="130" cy="80" rx="70" ry="40" fill="#2D5A3D"/></svg>
+  <svg class="cloud-float-2 absolute top-[15%] right-[-3%] w-[250px] h-[120px] opacity-[.05]" viewBox="0 0 250 120"><ellipse cx="80" cy="80" rx="65" ry="30" fill="#8B2500"/><ellipse cx="150" cy="70" rx="55" ry="28" fill="#8B2500"/><ellipse cx="110" cy="65" rx="60" ry="35" fill="#8B2500"/></svg>
 
-        <div class="progress-bar">
-            <div class="progress-fill" id="progressBar" style="width: 100%"></div>
-        </div>
+  <!-- Floating herb leaves -->
+  <div class="absolute top-[20%] left-[8%] text-4xl opacity-20 text-ink" style="animation:leafFloat 18s ease-in-out infinite">🌿</div>
+  <div class="absolute top-[60%] right-[10%] text-3xl opacity-15 text-ink" style="animation:leafFloat 22s ease-in-out infinite;animation-delay:-6s">🍃</div>
+  <div class="absolute bottom-[25%] left-[15%] text-2xl opacity-10 text-ink" style="animation:leafFloat 20s ease-in-out infinite;animation-delay:-12s">🌱</div>
 
-        <div class="message info" id="message">找出颜色不同的方块！</div>
+  <!-- Decorative vertical text -->
+  <div class="absolute top-[15%] right-[5%] hidden lg:block opacity-[.06]">
+    <div class="font-brush text-6xl text-ink writing-vertical" style="writing-mode:vertical-rl">悬壶济世</div>
+  </div>
+  <div class="absolute bottom-[15%] left-[5%] hidden lg:block opacity-[.06]">
+    <div class="font-brush text-6xl text-vermillion writing-vertical" style="writing-mode:vertical-rl">妙手回春</div>
+  </div>
 
-        <div class="combo hidden" id="combo">🔥 x1 连击!</div>
-
-        <div class="game-board" id="gameBoard">
-            <!-- 动态生成 -->
-        </div>
-
-        <div class="controls">
-            <button class="btn btn-primary" onclick="startGame()">
-                <span>▶️</span> 开始游戏
-            </button>
-            <button class="btn btn-secondary" onclick="showHelp()">
-                <span>❓</span> 游戏说明
-            </button>
-        </div>
+  <!-- Main content -->
+  <div class="relative z-10 text-center px-6 max-w-4xl mx-auto">
+    <!-- Small ornament -->
+    <div class="reveal mb-6 flex items-center justify-center gap-4">
+      <div class="w-12 h-px bg-gold/40"></div>
+      <span class="text-gold text-xs tracking-[.3em] font-sans">始创于 1923 年</span>
+      <div class="w-12 h-px bg-gold/40"></div>
     </div>
 
-    <!-- 开始/结束弹窗 -->
-    <div class="overlay" id="overlay">
-        <div class="modal">
-            <div class="duck-icon">🦆</div>
-            <h2 id="modalTitle">准备好了吗？</h2>
-            <p id="modalText">找出颜色不同的方块，挑战你的色彩敏感度！</p>
-            <div class="final-score hidden" id="finalScore">0</div>
-            <div class="rating hidden" id="rating"></div>
-            <button class="btn btn-primary" onclick="startGame()" style="font-size: 20px; padding: 18px 40px;">
-                开始挑战 🎮
-            </button>
-        </div>
+    <h1 class="reveal font-brush text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-darkwood leading-tight mb-6" style="transition-delay:.1s">
+      传承千年医道<br>
+      <span class="text-vermillion">守护百姓健康</span>
+    </h1>
+
+    <p class="reveal font-serif text-lg sm:text-xl text-warmgray font-light leading-relaxed mb-10 max-w-2xl mx-auto" style="transition-delay:.2s">
+      济仁堂中医诊所 — 以仁心行医术，用草药济苍生
+    </p>
+
+    <div class="reveal flex flex-col sm:flex-row items-center justify-center gap-4" style="transition-delay:.3s">
+      <a href="#appointment" class="group bg-vermillion text-parchment px-8 py-4 rounded font-serif text-base tracking-wider hover:bg-vermillion2 transition-all duration-300 hover:shadow-xl hover:shadow-vermillion/20 flex items-center gap-2">
+        预约挂号
+        <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#about" class="group border-2 border-ink/20 text-ink px-8 py-4 rounded font-serif text-base tracking-wider hover:border-ink hover:bg-ink hover:text-parchment transition-all duration-300 flex items-center gap-2">
+        了解更多
+        <svg class="w-4 h-4 group-hover:translate-y-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+      </a>
     </div>
 
-    <script>
-        let level = 1;
-        let score = 0;
-        let timeLeft = 60;
-        let timer = null;
-        let isPlaying = false;
-        let combo = 0;
-        let maxLevels = 20;
-        let baseColor = '';
-        let differentColor = '';
-        let differentIndex = 0;
+    <!-- Scroll indicator -->
+    <div class="reveal absolute bottom-8 left-1/2 -translate-x-1/2" style="transition-delay:.5s">
+      <div class="w-6 h-10 border-2 border-warmgray/30 rounded-full flex justify-center pt-2">
+        <div class="w-1 h-2 bg-warmgray/40 rounded-full animate-bounce"></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        // 生成随机颜色
-        function randomColor() {
-            const hue = Math.floor(Math.random() * 360);
-            const sat = 60 + Math.floor(Math.random() * 30);
-            const light = 50 + Math.floor(Math.random() * 20);
-            return `hsl(${hue}, ${sat}%, ${light}%)`;
-        }
+<!-- ============ FEATURES / ABOUT ============ -->
+<section id="about" class="relative py-20 sm:py-28 bg-parchment ink-wash">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Section header -->
+    <div class="text-center mb-16 reveal">
+      <span class="text-gold text-xs tracking-[.3em] font-sans uppercase">Our Heritage</span>
+      <h2 class="font-brush text-4xl sm:text-5xl text-darkwood mt-3">百年济仁堂</h2>
+      <div class="gold-line w-20 mt-4"></div>
+      <p class="font-sans text-warmgray mt-6 max-w-2xl mx-auto leading-relaxed">
+        济仁堂始创于1923年，历经四代传承，始终秉持"济世仁心"的祖训，将传统中医精髓与现代医学理念相融合，为患者提供最优质的中医诊疗服务。
+      </p>
+    </div>
 
-        // 生成相似颜色（找不同的目标）
-        function similarColor(baseColor, difficulty) {
-            // 解析 HSL
-            const match = baseColor.match(/hsl\((\d+),\s*(\d+)%,\s*(\d+)%\)/);
-            if (!match) return baseColor;
-            
-            let [_, h, s, l] = match.map(Number);
-            
-            // 根据难度调整差异
-            const diff = Math.max(5, 25 - difficulty * 2);
-            h = (h + diff + Math.random() * diff) % 360;
-            
-            return `hsl(${Math.floor(h)}, ${s}%, ${l}%)`;
-        }
+    <!-- Feature cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Card 1 -->
+      <div class="reveal card-lift bg-white/70 backdrop-blur-sm rounded-xl p-8 text-center border border-gold/10 group" style="transition-delay:.05s">
+        <div class="w-16 h-16 mx-auto mb-5 rounded-full bg-vermillion/8 flex items-center justify-center group-hover:bg-vermillion/15 transition-colors duration-300">
+          <svg class="w-8 h-8 text-vermillion" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <h3 class="font-serif text-lg font-bold text-darkwood mb-2">百年传承</h3>
+        <p class="text-sm text-warmgray leading-relaxed">始创于1923年，四代中医世家薪火相传，百年积淀成就精湛医术</p>
+      </div>
+      <!-- Card 2 -->
+      <div class="reveal card-lift bg-white/70 backdrop-blur-sm rounded-xl p-8 text-center border border-gold/10 group" style="transition-delay:.1s">
+        <div class="w-16 h-16 mx-auto mb-5 rounded-full bg-ink/8 flex items-center justify-center group-hover:bg-ink/15 transition-colors duration-300">
+          <svg class="w-8 h-8 text-ink" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+        </div>
+        <h3 class="font-serif text-lg font-bold text-darkwood mb-2">道地药材</h3>
+        <p class="text-sm text-warmgray leading-relaxed">严选全国GAP规范化基地药材，从源头把控品质，确保药效纯正</p>
+      </div>
+      <!-- Card 3 -->
+      <div class="reveal card-lift bg-white/70 backdrop-blur-sm rounded-xl p-8 text-center border border-gold/10 group" style="transition-delay:.15s">
+        <div class="w-16 h-16 mx-auto mb-5 rounded-full bg-gold/10 flex items-center justify-center group-hover:bg-gold/20 transition-colors duration-300">
+          <svg class="w-8 h-8 text-gold" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3 class="font-serif text-lg font-bold text-darkwood mb-2">名医坐诊</h3>
+        <p class="text-sm text-warmgray leading-relaxed">多位省级名中医领衔，汇聚资深中医专家，临床经验逾三十载</p>
+      </div>
+      <!-- Card 4 -->
+      <div class="reveal card-lift bg-white/70 backdrop-blur-sm rounded-xl p-8 text-center border border-gold/10 group" style="transition-delay:.2s">
+        <div class="w-16 h-16 mx-auto mb-5 rounded-full bg-vermillion/8 flex items-center justify-center group-hover:bg-vermillion/15 transition-colors duration-300">
+          <svg class="w-8 h-8 text-vermillion" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+        </div>
+        <h3 class="font-serif text-lg font-bold text-darkwood mb-2">个性化诊疗</h3>
+        <p class="text-sm text-warmgray leading-relaxed">望闻问切四诊合参，辨证施治一人一方，量身定制调理方案</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-        // 计算网格大小
-        function getGridSize(level) {
-            if (level <= 3) return 2; // 2x2
-            if (level <= 6) return 3; // 3x3
-            if (level <= 10) return 4; // 4x4
-            if (level <= 15) return 5; // 5x5
-            return 6; // 6x6
-        }
+<!-- ============ SERVICES ============ -->
+<section id="services" class="relative py-20 sm:py-28 bg-ink text-parchment overflow-hidden">
+  <!-- Subtle pattern -->
+  <div class="absolute inset-0 opacity-[.03] cloud-pattern"></div>
+  <div class="grain" style="opacity:.02"></div>
 
-        // 创建游戏板
-        function createBoard() {
-            const board = document.getElementById('gameBoard');
-            board.innerHTML = '';
-            
-            const size = getGridSize(level);
-            const totalCells = size * size;
-            
-            // 设置网格
-            board.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
-            
-            // 生成颜色
-            baseColor = randomColor();
-            differentColor = similarColor(baseColor, level);
-            differentIndex = Math.floor(Math.random() * totalCells);
-            
-            // 创建单元格
-            for (let i = 0; i < totalCells; i++) {
-                const cell = document.createElement('div');
-                cell.className = 'color-cell';
-                cell.style.backgroundColor = i === differentIndex ? differentColor : baseColor;
-                cell.onclick = () => checkAnswer(i);
-                board.appendChild(cell);
-            }
-            
-            // 调整单元格大小
-            const cellSize = size <= 3 ? 100 : size <= 4 ? 80 : 60;
-            document.querySelectorAll('.color-cell').forEach(cell => {
-                cell.style.width = cellSize + 'px';
-                cell.style.height = cellSize + 'px';
-            });
-        }
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16 reveal">
+      <span class="text-gold text-xs tracking-[.3em] font-sans uppercase">Specialties</span>
+      <h2 class="font-brush text-4xl sm:text-5xl text-parchment mt-3">诊疗项目</h2>
+      <div class="gold-line w-20 mt-4"></div>
+      <p class="font-sans text-parchment/50 mt-6 max-w-2xl mx-auto leading-relaxed">
+        涵盖中医各科领域，以经典中医理论为根基，结合现代诊疗技术，为您提供全方位的健康呵护
+      </p>
+    </div>
 
-        // 检查答案
-        function checkAnswer(index) {
-            if (!isPlaying) return;
-            
-            const cells = document.querySelectorAll('.color-cell');
-            
-            if (index === differentIndex) {
-                // 答对了
-                cells[index].classList.add('correct');
-                combo++;
-                const points = 10 * level + (combo > 1 ? combo * 5 : 0);
-                score += points;
-                
-                // 显示连击
-                if (combo > 1) {
-                    const comboEl = document.getElementById('combo');
-                    comboEl.textContent = `🔥 x${combo} 连击! +${combo * 5}分`;
-                    comboEl.classList.remove('hidden');
-                    setTimeout(() => comboEl.classList.add('hidden'), 1500);
-                }
-                
-                // 粒子效果
-                createParticles(cells[index]);
-                
-                showMessage(`太棒了！+${points}分`, 'success');
-                updateUI();
-                
-                setTimeout(() => {
-                    level++;
-                    if (level > maxLevels) {
-                        endGame(true);
-                    } else {
-                        createBoard();
-                        updateLevelIndicator();
-                    }
-                }, 500);
-            } else {
-                // 答错了
-                cells[index].classList.add('wrong');
-                combo = 0;
-                score = Math.max(0, score - 5);
-                showMessage('再仔细看看哦~', 'error');
-                updateUI();
-                
-                setTimeout(() => {
-                    cells[index].classList.remove('wrong');
-                }, 500);
-            }
-        }
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <!-- Service cards -->
+      <div class="reveal-scale card-lift bg-white/[.06] backdrop-blur-sm rounded-xl p-7 border border-white/[.08] group cursor-pointer hover:bg-white/[.1] hover:border-gold/20" style="transition-delay:.05s">
+        <div class="text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">🏥</div>
+        <h3 class="font-serif text-lg font-bold text-parchment mb-2">中医内科</h3>
+        <p class="text-sm text-parchment/50 leading-relaxed">脾胃调理 · 失眠多梦 · 慢性病管理 · 体虚乏力</p>
+        <div class="mt-4 flex items-center gap-1 text-gold text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <span>了解详情</span>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
 
-        // 创建粒子效果
-        function createParticles(element) {
-            const rect = element.getBoundingClientRect();
-            const particles = ['✨', '🌟', '💫', '⭐'];
-            
-            for (let i = 0; i < 5; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.textContent = particles[Math.floor(Math.random() * particles.length)];
-                particle.style.left = rect.left + rect.width / 2 + 'px';
-                particle.style.top = rect.top + rect.height / 2 + 'px';
-                particle.style.transform = `translate(${(Math.random() - 0.5) * 100}px, ${(Math.random() - 0.5) * 100}px)`;
-                document.body.appendChild(particle);
-                
-                setTimeout(() => particle.remove(), 1000);
-            }
-        }
+      <div class="reveal-scale card-lift bg-white/[.06] backdrop-blur-sm rounded-xl p-7 border border-white/[.08] group cursor-pointer hover:bg-white/[.1] hover:border-gold/20" style="transition-delay:.1s">
+        <div class="text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">📍</div>
+        <h3 class="font-serif text-lg font-bold text-parchment mb-2">针灸推拿</h3>
+        <p class="text-sm text-parchment/50 leading-relaxed">颈肩腰腿痛 · 经络调理 · 运动损伤 · 面瘫康复</p>
+        <div class="mt-4 flex items-center gap-1 text-gold text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <span>了解详情</span>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
 
-        // 显示消息
-        function showMessage(text, type) {
-            const msg = document.getElementById('message');
-            msg.textContent = text;
-            msg.className = 'message ' + type;
-        }
+      <div class="reveal-scale card-lift bg-white/[.06] backdrop-blur-sm rounded-xl p-7 border border-white/[.08] group cursor-pointer hover:bg-white/[.1] hover:border-gold/20" style="transition-delay:.15s">
+        <div class="text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">🌸</div>
+        <h3 class="font-serif text-lg font-bold text-parchment mb-2">中医妇科</h3>
+        <p class="text-sm text-parchment/50 leading-relaxed">月经不调 · 备孕调理 · 更年期综合征 · 产后恢复</p>
+        <div class="mt-4 flex items-center gap-1 text-gold text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <span>了解详情</span>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
 
-        // 更新UI
-        function updateUI() {
-            document.getElementById('level').textContent = level;
-            document.getElementById('score').textContent = score;
-            document.getElementById('time').textContent = timeLeft;
-        }
+      <div class="reveal-scale card-lift bg-white/[.06] backdrop-blur-sm rounded-xl p-7 border border-white/[.08] group cursor-pointer hover:bg-white/[.1] hover:border-gold/20" style="transition-delay:.2s">
+        <div class="text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">👶</div>
+        <h3 class="font-serif text-lg font-bold text-parchment mb-2">中医儿科</h3>
+        <p class="text-sm text-parchment/50 leading-relaxed">小儿推拿 · 体质调理 · 厌食调治 · 反复感冒</p>
+        <div class="mt-4 flex items-center gap-1 text-gold text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <span>了解详情</span>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
 
-        // 更新关卡指示器
-        function updateLevelIndicator() {
-            const indicator = document.getElementById('levelIndicator');
-            indicator.innerHTML = '';
-            
-            for (let i = 1; i <= Math.min(maxLevels, 10); i++) {
-                const dot = document.createElement('div');
-                dot.className = 'level-dot';
-                if (i < level) dot.classList.add('completed');
-                else if (i === level) dot.classList.add('active');
-                indicator.appendChild(dot);
-            }
-        }
+      <div class="reveal-scale card-lift bg-white/[.06] backdrop-blur-sm rounded-xl p-7 border border-white/[.08] group cursor-pointer hover:bg-white/[.1] hover:border-gold/20" style="transition-delay:.25s">
+        <div class="text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">🍯</div>
+        <h3 class="font-serif text-lg font-bold text-parchment mb-2">中药膏方</h3>
+        <p class="text-sm text-parchment/50 leading-relaxed">冬令进补 · 体质调理 · 慢病调养 · 定制膏方</p>
+        <div class="mt-4 flex items-center gap-1 text-gold text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <span>了解详情</span>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
 
-        // 开始游戏
-        function startGame() {
-            document.getElementById('overlay').classList.add('hidden');
-            level = 1;
-            score = 0;
-            combo = 0;
-            timeLeft = 60;
-            isPlaying = true;
-            
-            updateUI();
-            updateLevelIndicator();
-            createBoard();
-            showMessage('找出颜色不同的方块！', 'info');
-            
-            // 启动计时器
-            if (timer) clearInterval(timer);
-            timer = setInterval(() => {
-                timeLeft--;
-                document.getElementById('time').textContent = timeLeft;
-                document.getElementById('progressBar').style.width = (timeLeft / 60 * 100) + '%';
-                
-                if (timeLeft <= 10) {
-                    document.getElementById('progressBar').style.background = 'linear-gradient(90deg, #FF6B6B 0%, #FF8E8E 100%)';
-                }
-                
-                if (timeLeft <= 0) {
-                    endGame(false);
-                }
-            }, 1000);
-        }
+      <div class="reveal-scale card-lift bg-white/[.06] backdrop-blur-sm rounded-xl p-7 border border-white/[.08] group cursor-pointer hover:bg-white/[.1] hover:border-gold/20" style="transition-delay:.3s">
+        <div class="text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">🛡️</div>
+        <h3 class="font-serif text-lg font-bold text-parchment mb-2">治未病中心</h3>
+        <p class="text-sm text-parchment/50 leading-relaxed">体质辨识 · 亚健康调理 · 健康管理 · 节气养生</p>
+        <div class="mt-4 flex items-center gap-1 text-gold text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <span>了解详情</span>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
 
-        // 结束游戏
-        function endGame(completed) {
-            isPlaying = false;
-            clearInterval(timer);
-            
-            const overlay = document.getElementById('overlay');
-            const title = document.getElementById('modalTitle');
-            const text = document.getElementById('modalText');
-            const finalScore = document.getElementById('finalScore');
-            const rating = document.getElementById('rating');
-            
-            overlay.classList.remove('hidden');
-            finalScore.classList.remove('hidden');
-            rating.classList.remove('hidden');
-            
-            finalScore.textContent = score;
-            
-            if (completed) {
-                title.textContent = '🎉 太厉害了！';
-                text.textContent = '你完成了所有关卡！色彩敏感度满分！';
-            } else {
-                title.textContent = '⏰ 时间到！';
-                text.textContent = `你闯到了第 ${level} 关`;
-            }
-            
-            // 评级
-            if (score >= 1000) {
-                rating.textContent = '🏆 色彩大师';
-            } else if (score >= 700) {
-                rating.textContent = '⭐ 色彩达人';
-            } else if (score >= 400) {
-                rating.textContent = '👍 色彩能手';
-            } else {
-                rating.textContent = '💪 继续加油';
-            }
-            
-            // 重置进度条颜色
-            document.getElementById('progressBar').style.background = '';
-        }
+      <div class="reveal-scale card-lift bg-white/[.06] backdrop-blur-sm rounded-xl p-7 border border-white/[.08] group cursor-pointer hover:bg-white/[.1] hover:border-gold/20" style="transition-delay:.35s">
+        <div class="text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">🦴</div>
+        <h3 class="font-serif text-lg font-bold text-parchment mb-2">中医骨伤</h3>
+        <p class="text-sm text-parchment/50 leading-relaxed">跌打损伤 · 骨关节病 · 颈椎病 · 腰椎间盘突出</p>
+        <div class="mt-4 flex items-center gap-1 text-gold text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <span>了解详情</span>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
 
-        // 显示帮助
-        function showHelp() {
-            alert('🎮 游戏说明：\n\n1. 找出颜色不同的方块\n2. 点击正确的方块得分\n3. 连续答对可获得连击加分\n4. 在60秒内获得最高分！\n\n💡 小技巧：\n- 眯起眼睛更容易看出差异\n- 连击越高得分越多\n- 关卡越高难度越大');
-        }
+      <div class="reveal-scale card-lift bg-white/[.06] backdrop-blur-sm rounded-xl p-7 border border-white/[.08] group cursor-pointer hover:bg-white/[.1] hover:border-gold/20" style="transition-delay:.4s">
+        <div class="text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">✨</div>
+        <h3 class="font-serif text-lg font-bold text-parchment mb-2">中医皮肤科</h3>
+        <p class="text-sm text-parchment/50 leading-relaxed">湿疹调理 · 痤疮治疗 · 银屑病 · 皮肤过敏</p>
+        <div class="mt-4 flex items-center gap-1 text-gold text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <span>了解详情</span>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        // 初始化
-        updateLevelIndicator();
-    </script>
+<!-- Wave divider -->
+<div class="wave-divider bg-ink"></div>
+
+<!-- ============ DOCTORS ============ -->
+<section id="doctors" class="relative py-20 sm:py-28 bg-parchment ink-wash">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16 reveal">
+      <span class="text-gold text-xs tracking-[.3em] font-sans uppercase">Expert Team</span>
+      <h2 class="font-brush text-4xl sm:text-5xl text-darkwood mt-3">名医团队</h2>
+      <div class="gold-line w-20 mt-4"></div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <!-- Doctor 1 -->
+      <div class="reveal card-lift group" style="transition-delay:.05s">
+        <div class="bg-white rounded-2xl overflow-hidden border border-gold/10 group-hover:border-gold/25 transition-all">
+          <div class="doctor-photo h-64 relative">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="text-center">
+                <div class="w-20 h-20 mx-auto rounded-full bg-warmgray/20 flex items-center justify-center">
+                  <svg class="w-10 h-10 text-warmgray/40" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                </div>
+              </div>
+            </div>
+            <!-- Decorative corner -->
+            <div class="absolute top-3 right-3 bg-vermillion text-parchment text-xs px-2 py-1 rounded font-sans">主任医师</div>
+          </div>
+          <div class="p-6">
+            <h3 class="font-serif text-xl font-bold text-darkwood">陈德明</h3>
+            <p class="text-vermillion text-sm mt-1 font-medium">省级名中医 · 主任医师</p>
+            <p class="text-warmgray text-xs mt-3 leading-relaxed">从医40余年，擅长中医内科疑难杂症，尤精于脾胃病、肝胆病及老年慢性病的中医调治。师承国医大师张老，学验俱丰。</p>
+            <div class="mt-4 pt-4 border-t border-gold/10 flex items-center gap-2 text-xs text-gold">
+              <span class="bg-gold/10 px-2 py-0.5 rounded">脾胃病</span>
+              <span class="bg-gold/10 px-2 py-0.5 rounded">肝胆病</span>
+              <span class="bg-gold/10 px-2 py-0.5 rounded">内科</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Doctor 2 -->
+      <div class="reveal card-lift group" style="transition-delay:.1s">
+        <div class="bg-white rounded-2xl overflow-hidden border border-gold/10 group-hover:border-gold/25 transition-all">
+          <div class="doctor-photo h-64 relative">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="w-20 h-20 mx-auto rounded-full bg-warmgray/20 flex items-center justify-center">
+                <svg class="w-10 h-10 text-warmgray/40" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+              </div>
+            </div>
+            <div class="absolute top-3 right-3 bg-ink text-parchment text-xs px-2 py-1 rounded font-sans">副主任医师</div>
+          </div>
+          <div class="p-6">
+            <h3 class="font-serif text-xl font-bold text-darkwood">林婉清</h3>
+            <p class="text-vermillion text-sm mt-1 font-medium">中医妇科专家 · 副主任医师</p>
+            <p class="text-warmgray text-xs mt-3 leading-relaxed">专注中医妇科30年，擅长运用经方治疗月经不调、不孕症、更年期综合征等。注重整体调理，辨证精准。</p>
+            <div class="mt-4 pt-4 border-t border-gold/10 flex items-center gap-2 text-xs text-gold">
+              <span class="bg-gold/10 px-2 py-0.5 rounded">妇科</span>
+              <span class="bg-gold/10 px-2 py-0.5 rounded">不孕</span>
+              <span class="bg-gold/10 px-2 py-0.5 rounded">经方</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Doctor 3 -->
+      <div class="reveal card-lift group" style="transition-delay:.15s">
+        <div class="bg-white rounded-2xl overflow-hidden border border-gold/10 group-hover:border-gold/25 transition-all">
+          <div class="doctor-photo h-64 relative">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="w-20 h-20 mx-auto rounded-full bg-warmgray/20 flex items-center justify-center">
+                <svg class="w-10 h-10 text-warmgray/40" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+              </div>
+            </div>
+            <div class="absolute top-3 right-3 bg-vermillion text-parchment text-xs px-2 py-1 rounded font-sans">主任医师</div>
+          </div>
+          <div class="p-6">
+            <h3 class="font-serif text-xl font-bold text-darkwood">王志远</h3>
+            <p class="text-vermillion text-sm mt-1 font-medium">针灸科主任 · 主任医师</p>
+            <p class="text-warmgray text-xs mt-3 leading-relaxed">师从多位针灸名家，精通各种针法，在颈肩腰腿痛、面瘫、中风后遗症等领域造诣深厚，手法独到。</p>
+            <div class="mt-4 pt-4 border-t border-gold/10 flex items-center gap-2 text-xs text-gold">
+              <span class="bg-gold/10 px-2 py-0.5 rounded">针灸</span>
+              <span class="bg-gold/10 px-2 py-0.5 rounded">疼痛</span>
+              <span class="bg-gold/10 px-2 py-0.5 rounded">中风</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Doctor 4 -->
+      <div class="reveal card-lift group" style="transition-delay:.2s">
+        <div class="bg-white rounded-2xl overflow-hidden border border-gold/10 group-hover:border-gold/25 transition-all">
+          <div class="doctor-photo h-64 relative">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="w-20 h-20 mx-auto rounded-full bg-warmgray/20 flex items-center justify-center">
+                <svg class="w-10 h-10 text-warmgray/40" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+              </div>
+            </div>
+            <div class="absolute top-3 right-3 bg-ink text-parchment text-xs px-2 py-1 rounded font-sans">副主任医师</div>
+          </div>
+          <div class="p-6">
+            <h3 class="font-serif text-xl font-bold text-darkwood">赵明辉</h3>
+            <p class="text-vermillion text-sm mt-1 font-medium">治未病中心主任 · 副主任医师</p>
+            <p class="text-warmgray text-xs mt-3 leading-relaxed">致力于中医"治未病"理论的临床实践，擅长体质辨识与调理、亚健康干预、膏方定制。学贯中西，理念创新。</p>
+            <div class="mt-4 pt-4 border-t border-gold/10 flex items-center gap-2 text-xs text-gold">
+              <span class="bg-gold/10 px-2 py-0.5 rounded">治未病</span>
+              <span class="bg-gold/10 px-2 py-0.5 rounded">膏方</span>
+              <span class="bg-gold/10 px-2 py-0.5 rounded">体质</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIALS ============ -->
+<section class="relative py-20 sm:py-28 bg-parchment2">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16 reveal">
+      <span class="text-gold text-xs tracking-[.3em] font-sans uppercase">Testimonials</span>
+      <h2 class="font-brush text-4xl sm:text-5xl text-darkwood mt-3">患者心声</h2>
+      <div class="gold-line w-20 mt-4"></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Testimonial 1 -->
+      <div class="reveal card-lift testimonial-bg rounded-xl p-8 border border-gold/8 relative" style="transition-delay:.05s">
+        <div class="text-gold/20 text-5xl font-serif absolute top-4 right-6">"</div>
+        <div class="flex items-center gap-1 mb-4">
+          <span class="text-gold">★</span><span class="text-gold">★</span><span class="text-gold">★</span><span class="text-gold">★</span><span class="text-gold">★</span>
+        </div>
+        <p class="text-sm text-darkwood/70 leading-relaxed mb-6">多年的胃病，吃了很多西药都反复。在陈主任这里调理了三个月，现在胃再也不疼了，吃饭也香了。非常感谢济仁堂！</p>
+        <div class="flex items-center gap-3 pt-4 border-t border-gold/10">
+          <div class="w-10 h-10 rounded-full bg-ink/10 flex items-center justify-center text-ink font-serif font-bold text-sm">张</div>
+          <div>
+            <div class="text-sm font-medium text-darkwood">张女士</div>
+            <div class="text-xs text-warmgray">慢性胃炎患者 · 调理3个月</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial 2 -->
+      <div class="reveal card-lift testimonial-bg rounded-xl p-8 border border-gold/8 relative" style="transition-delay:.1s">
+        <div class="text-gold/20 text-5xl font-serif absolute top-4 right-6">"</div>
+        <div class="flex items-center gap-1 mb-4">
+          <span class="text-gold">★</span><span class="text-gold">★</span><span class="text-gold">★</span><span class="text-gold">★</span><span class="text-gold">★</span>
+        </div>
+        <p class="text-sm text-darkwood/70 leading-relaxed mb-6">王医生的针灸真的太神奇了！我颈椎病导致的头晕、手麻，扎了几次针就明显好转。现在已经完全康复，生活质量提升了很多。</p>
+        <div class="flex items-center gap-3 pt-4 border-t border-gold/10">
+          <div class="w-10 h-10 rounded-full bg-vermillion/10 flex items-center justify-center text-vermillion font-serif font-bold text-sm">李</div>
+          <div>
+            <div class="text-sm font-medium text-darkwood">李先生</div>
+            <div class="text-xs text-warmgray">颈椎病患者 · 针灸治疗</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial 3 -->
+      <div class="reveal card-lift testimonial-bg rounded-xl p-8 border border-gold/8 relative" style="transition-delay:.15s">
+        <div class="text-gold/20 text-5xl font-serif absolute top-4 right-6">"</div>
+        <div class="flex items-center gap-1 mb-4">
+          <span class="text-gold">★</span><span class="text-gold">★</span><span class="text-gold">★</span><span class="text-gold">★</span><span class="text-gold">★</span>
+        </div>
+        <p class="text-sm text-darkwood/70 leading-relaxed mb-6">备孕两年没成功，朋友推荐来林医生这里调理。林医生非常耐心，开的方子也很温和。调理半年后顺利怀孕，现在宝宝很健康！</p>
+        <div class="flex items-center gap-3 pt-4 border-t border-gold/10">
+          <div class="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center text-gold font-serif font-bold text-sm">王</div>
+          <div>
+            <div class="text-sm font-medium text-darkwood">王女士</div>
+            <div class="text-xs text-warmgray">备孕调理患者 · 调理6个月</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ARTICLES ============ -->
+<section id="articles" class="relative py-20 sm:py-28 bg-parchment">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16 reveal">
+      <span class="text-gold text-xs tracking-[.3em] font-sans uppercase">Wellness</span>
+      <h2 class="font-brush text-4xl sm:text-5xl text-darkwood mt-3">养生知识</h2>
+      <div class="gold-line w-20 mt-4"></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Article 1 -->
+      <div class="reveal card-lift group cursor-pointer" style="transition-delay:.05s">
+        <div class="bg-white rounded-2xl overflow-hidden border border-gold/10 group-hover:border-gold/20 transition-all">
+          <div class="article-thumb article-thumb-1 h-48 relative">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="font-brush text-5xl text-ink/10">春</span>
+            </div>
+            <div class="absolute bottom-3 left-3 bg-ink text-parchment text-xs px-2 py-1 rounded font-sans">春季养生</div>
+          </div>
+          <div class="p-6">
+            <div class="text-xs text-warmgray mb-2 font-sans">2026年3月15日</div>
+            <h3 class="font-serif text-lg font-bold text-darkwood mb-2 group-hover:text-vermillion transition-colors">春季养肝正当时：五个简单方法让您精力充沛</h3>
+            <p class="text-sm text-warmgray leading-relaxed">中医认为"春应肝"，春季是养肝的最佳时节。通过合理的饮食调理、情志疏导和适当运动，可以有效疏肝理气...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Article 2 -->
+      <div class="reveal card-lift group cursor-pointer" style="transition-delay:.1s">
+        <div class="bg-white rounded-2xl overflow-hidden border border-gold/10 group-hover:border-gold/20 transition-all">
+          <div class="article-thumb article-thumb-2 h-48 relative">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="font-brush text-5xl text-vermillion/10">药</span>
+            </div>
+            <div class="absolute bottom-3 left-3 bg-vermillion text-parchment text-xs px-2 py-1 rounded font-sans">药膳食疗</div>
+          </div>
+          <div class="p-6">
+            <div class="text-xs text-warmgray mb-2 font-sans">2026年3月10日</div>
+            <h3 class="font-serif text-lg font-bold text-darkwood mb-2 group-hover:text-vermillion transition-colors">药食同源：八款家庭常用养生汤方推荐</h3>
+            <p class="text-sm text-warmgray leading-relaxed">中医素有"药食同源"之说。日常生活中，许多食材本身就具有良好的调理功效。本文精选八款适合家庭日常的养生汤方...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Article 3 -->
+      <div class="reveal card-lift group cursor-pointer" style="transition-delay:.15s">
+        <div class="bg-white rounded-2xl overflow-hidden border border-gold/10 group-hover:border-gold/20 transition-all">
+          <div class="article-thumb article-thumb-3 h-48 relative">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="font-brush text-5xl text-gold/10">穴</span>
+            </div>
+            <div class="absolute bottom-3 left-3 bg-gold text-darkwood text-xs px-2 py-1 rounded font-sans">穴位保健</div>
+          </div>
+          <div class="p-6">
+            <div class="text-xs text-warmgray mb-2 font-sans">2026年3月5日</div>
+            <h3 class="font-serif text-lg font-bold text-darkwood mb-2 group-hover:text-vermillion transition-colors">办公族必知：六个穴位缓解颈肩疲劳</h3>
+            <p class="text-sm text-warmgray leading-relaxed">长期伏案工作容易导致颈肩僵硬、疼痛。中医经络理论认为，通过按摩特定穴位可以疏通经络、缓解肌肉紧张...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ APPOINTMENT ============ -->
+<section id="appointment" class="relative py-20 sm:py-28 bg-ink text-parchment overflow-hidden">
+  <div class="absolute inset-0 opacity-[.03] cloud-pattern"></div>
+  <div class="grain" style="opacity:.02"></div>
+
+  <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12 reveal">
+      <span class="text-gold text-xs tracking-[.3em] font-sans uppercase">Appointment</span>
+      <h2 class="font-brush text-4xl sm:text-5xl text-parchment mt-3">预约挂号</h2>
+      <div class="gold-line w-20 mt-4"></div>
+      <p class="font-sans text-parchment/50 mt-6 max-w-xl mx-auto leading-relaxed">
+        填写以下信息，我们将在24小时内与您联系确认预约
+      </p>
+    </div>
+
+    <form id="appointForm" class="reveal bg-white/[.06] backdrop-blur-sm rounded-2xl p-8 sm:p-10 border border-white/[.08]" novalidate>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <!-- Name -->
+        <div>
+          <label class="block text-sm text-parchment/60 mb-2 font-sans">姓名 <span class="text-vermillion2">*</span></label>
+          <input type="text" name="name" required placeholder="请输入您的姓名" class="w-full bg-white/[.06] border border-white/[.12] rounded-lg px-4 py-3 text-sm text-parchment placeholder:text-parchment/20 transition-all duration-300">
+          <p class="err-msg text-vermillion2 text-xs mt-1 hidden"></p>
+        </div>
+        <!-- Phone -->
+        <div>
+          <label class="block text-sm text-parchment/60 mb-2 font-sans">联系电话 <span class="text-vermillion2">*</span></label>
+          <input type="tel" name="phone" required placeholder="请输入手机号码" class="w-full bg-white/[.06] border border-white/[.12] rounded-lg px-4 py-3 text-sm text-parchment placeholder:text-parchment/20 transition-all duration-300">
+          <p class="err-msg text-vermillion2 text-xs mt-1 hidden"></p>
+        </div>
+        <!-- Department -->
+        <div>
+          <label class="block text-sm text-parchment/60 mb-2 font-sans">选择科室 <span class="text-vermillion2">*</span></label>
+          <select name="department" required class="w-full bg-white/[.06] border border-white/[.12] rounded-lg px-4 py-3 text-sm text-parchment transition-all duration-300 appearance-none" style="background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 fill=%22%23C5A55A%22 viewBox=%220 0 16 16%22><path d=%22M8 11L3 6h10z%22/></svg>');background-repeat:no-repeat;background-position:right 12px center">
+            <option value="" class="bg-ink">请选择科室</option>
+            <option value="内科" class="bg-ink">中医内科</option>
+            <option value="针灸推拿" class="bg-ink">针灸推拿科</option>
+            <option value="妇科" class="bg-ink">中医妇科</option>
+            <option value="儿科" class="bg-ink">中医儿科</option>
+            <option value="膏方" class="bg-ink">中药膏方</option>
+            <option value="治未病" class="bg-ink">治未病中心</option>
+            <option value="骨伤" class="bg-ink">中医骨伤科</option>
+            <option value="皮肤科" class="bg-ink">中医皮肤科</option>
+          </select>
+          <p class="err-msg text-vermillion2 text-xs mt-1 hidden"></p>
+        </div>
+        <!-- Doctor -->
+        <div>
+          <label class="block text-sm text-parchment/60 mb-2 font-sans">选择医生</label>
+          <select name="doctor" class="w-full bg-white/[.06] border border-white/[.12] rounded-lg px-4 py-3 text-sm text-parchment transition-all duration-300 appearance-none" style="background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 fill=%22%23C5A55A%22 viewBox=%220 0 16 16%22><path d=%22M8 11L3 6h10z%22/></svg>');background-repeat:no-repeat;background-position:right 12px center">
+            <option value="" class="bg-ink">不指定 / 由诊所安排</option>
+            <option value="陈德明" class="bg-ink">陈德明 — 主任医师</option>
+            <option value="林婉清" class="bg-ink">林婉清 — 副主任医师</option>
+            <option value="王志远" class="bg-ink">王志远 — 主任医师</option>
+            <option value="赵明辉" class="bg-ink">赵明辉 — 副主任医师</option>
+          </select>
+        </div>
+        <!-- Date -->
+        <div>
+          <label class="block text-sm text-parchment/60 mb-2 font-sans">期望日期 <span class="text-vermillion2">*</span></label>
+          <input type="date" name="date" required class="w-full bg-white/[.06] border border-white/[.12] rounded-lg px-4 py-3 text-sm text-parchment transition-all duration-300">
+          <p class="err-msg text-vermillion2 text-xs mt-1 hidden"></p>
+        </div>
+        <!-- Time preference -->
+        <div>
+          <label class="block text-sm text-parchment/60 mb-2 font-sans">时间偏好</label>
+          <select name="time" class="w-full bg-white/[.06] border border-white/[.12] rounded-lg px-4 py-3 text-sm text-parchment transition-all duration-300 appearance-none" style="background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 fill=%22%23C5A55A%22 viewBox=%220 0 16 16%22><path d=%22M8 11L3 6h10z%22/></svg>');background-repeat:no-repeat;background-position:right 12px center">
+            <option value="" class="bg-ink">不限</option>
+            <option value="上午" class="bg-ink">上午 (8:00 - 12:00)</option>
+            <option value="下午" class="bg-ink">下午 (14:00 - 17:30)</option>
+          </select>
+        </div>
+      </div>
+      <!-- Symptoms -->
+      <div class="mt-5">
+        <label class="block text-sm text-parchment/60 mb-2 font-sans">症状描述</label>
+        <textarea name="symptoms" rows="3" placeholder="请简要描述您的症状或就诊需求，以便医生提前了解..." class="w-full bg-white/[.06] border border-white/[.12] rounded-lg px-4 py-3 text-sm text-parchment placeholder:text-parchment/20 transition-all duration-300 resize-none"></textarea>
+      </div>
+      <!-- Submit -->
+      <button type="submit" id="submitBtn" class="mt-8 w-full bg-gold text-darkwood py-4 rounded-lg font-serif text-base font-bold tracking-wider hover:bg-gold2 transition-all duration-300 hover:shadow-lg hover:shadow-gold/20 relative overflow-hidden">
+        <span id="btnText">提交预约</span>
+        <span id="btnLoading" class="hidden absolute inset-0 flex items-center justify-center">
+          <svg class="animate-spin w-5 h-5 text-darkwood" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/></svg>
+        </span>
+      </button>
+    </form>
+  </div>
+</section>
+
+<!-- Wave divider -->
+<div class="wave-divider bg-ink"></div>
+
+<!-- ============ CONTACT ============ -->
+<section id="contact" class="relative py-20 sm:py-28 bg-parchment">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16 reveal">
+      <span class="text-gold text-xs tracking-[.3em] font-sans uppercase">Contact Us</span>
+      <h2 class="font-brush text-4xl sm:text-5xl text-darkwood mt-3">联系我们</h2>
+      <div class="gold-line w-20 mt-4"></div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+      <!-- Contact Info -->
+      <div class="reveal-left">
+        <div class="space-y-6">
+          <!-- Address -->
+          <div class="flex gap-4 items-start">
+            <div class="w-12 h-12 rounded-xl bg-ink/5 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-ink" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0z"/></svg>
+            </div>
+            <div>
+              <h4 class="font-serif font-bold text-darkwood">诊所地址</h4>
+              <p class="text-sm text-warmgray mt-1">杭州市西湖区龙井路128号 济仁堂大厦</p>
+            </div>
+          </div>
+          <!-- Phone -->
+          <div class="flex gap-4 items-start">
+            <div class="w-12 h-12 rounded-xl bg-vermillion/5 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-vermillion" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25z"/></svg>
+            </div>
+            <div>
+              <h4 class="font-serif font-bold text-darkwood">预约电话</h4>
+              <p class="text-sm text-warmgray mt-1">0571-8888-6666</p>
+              <p class="text-xs text-warmgray/60 mt-0.5">（工作日 8:00 - 17:30）</p>
+            </div>
+          </div>
+          <!-- Hours -->
+          <div class="flex gap-4 items-start">
+            <div class="w-12 h-12 rounded-xl bg-gold/8 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            </div>
+            <div>
+              <h4 class="font-serif font-bold text-darkwood">营业时间</h4>
+              <div class="text-sm text-warmgray mt-1 space-y-0.5">
+                <p>周一至周五：8:00 — 17:30</p>
+                <p>周六：8:00 — 12:00</p>
+                <p>周日及法定假日：休息</p>
+              </div>
+            </div>
+          </div>
+          <!-- WeChat -->
+          <div class="flex gap-4 items-start">
+            <div class="w-12 h-12 rounded-xl bg-ink/5 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-ink" fill="currentColor" viewBox="0 0 24 24"><path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178A1.17 1.17 0 0 1 4.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813 0c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178 1.17 1.17 0 0 1-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826 0 1.622-.12 2.361-.336a.722.722 0 0 1 .598.082l1.584.926a.272.272 0 0 0 .14.046c.133 0 .241-.11.241-.245 0-.06-.024-.12-.04-.178l-.327-1.233a.582.582 0 0 1-.023-.156.49.49 0 0 1 .201-.398C23.024 18.48 24 16.82 24 14.98c0-3.21-2.931-5.952-7.062-6.122zM14.033 13.5c.535 0 .969.44.969.982a.976.976 0 0 1-.969.983.976.976 0 0 1-.969-.983c0-.542.434-.982.97-.982zm4.844 0c.535 0 .969.44.969.982a.976.976 0 0 1-.969.983.976.976 0 0 1-.969-.983c0-.542.434-.982.97-.982z"/></svg>
+            </div>
+            <div>
+              <h4 class="font-serif font-bold text-darkwood">微信公众号</h4>
+              <div class="mt-2 w-24 h-24 bg-warmgray/10 rounded-lg flex items-center justify-center border border-gold/10">
+                <div class="text-center">
+                  <svg class="w-8 h-8 mx-auto text-warmgray/30" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><rect x="7" y="7" width="4" height="4"/><rect x="13" y="7" width="4" height="4"/><rect x="7" y="13" width="4" height="4"/></svg>
+                  <p class="text-xs text-warmgray/40 mt-1">二维码</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Map -->
+      <div class="reveal-right">
+        <div class="map-placeholder rounded-2xl h-full min-h-[360px] overflow-hidden border border-gold/10 relative">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="text-center">
+              <svg class="w-12 h-12 mx-auto text-warmgray/30" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><path d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0z"/></svg>
+              <p class="text-sm text-warmgray/50 mt-2 font-serif">杭州市西湖区龙井路128号</p>
+              <p class="text-xs text-warmgray/30 mt-1">济仁堂大厦</p>
+            </div>
+          </div>
+          <!-- Decorative map elements -->
+          <div class="absolute top-4 left-4 bg-white/80 backdrop-blur-sm rounded px-3 py-1.5 text-xs text-darkwood border border-gold/10">
+            <span class="text-vermillion">●</span> 济仁堂中医诊所
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="bg-darkwood text-parchment/50 pt-16 pb-8">
+  <!-- Gold line -->
+  <div class="gold-line w-full mb-16" style="height:1px"></div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+      <!-- Brand -->
+      <div>
+        <div class="flex items-center gap-3 mb-4">
+          <div class="seal text-center leading-none" style="border-color:#C5A55A;color:#C5A55A;width:48px;height:48px;font-size:1rem">济仁<br>堂</div>
+          <div>
+            <div class="font-brush text-xl text-gold">济仁堂</div>
+            <div class="text-xs text-parchment/30 tracking-wider">中医诊所</div>
+          </div>
+        </div>
+        <p class="text-xs leading-relaxed text-parchment/40">始创于1923年，济仁堂秉承"济世仁心"祖训，百年来守护一方百姓健康，是杭州市历史最悠久的中医诊所之一。</p>
+      </div>
+      <!-- Quick Links -->
+      <div>
+        <h4 class="font-serif text-parchment/80 font-bold mb-4">快速链接</h4>
+        <div class="space-y-2.5">
+          <a href="#about" class="block text-sm hover:text-gold transition-colors duration-300">关于我们</a>
+          <a href="#services" class="block text-sm hover:text-gold transition-colors duration-300">诊疗项目</a>
+          <a href="#doctors" class="block text-sm hover:text-gold transition-colors duration-300">名医团队</a>
+          <a href="#articles" class="block text-sm hover:text-gold transition-colors duration-300">养生知识</a>
+          <a href="#appointment" class="block text-sm hover:text-gold transition-colors duration-300">预约挂号</a>
+        </div>
+      </div>
+      <!-- Services -->
+      <div>
+        <h4 class="font-serif text-parchment/80 font-bold mb-4">诊疗科目</h4>
+        <div class="space-y-2.5">
+          <span class="block text-sm">中医内科</span>
+          <span class="block text-sm">针灸推拿科</span>
+          <span class="block text-sm">中医妇科</span>
+          <span class="block text-sm">中医儿科</span>
+          <span class="block text-sm">治未病中心</span>
+        </div>
+      </div>
+      <!-- Contact -->
+      <div>
+        <h4 class="font-serif text-parchment/80 font-bold mb-4">联系方式</h4>
+        <div class="space-y-2.5 text-sm">
+          <p>杭州市西湖区龙井路128号</p>
+          <p>电话：0571-8888-6666</p>
+          <p>周一至周五 8:00-17:30</p>
+          <p>周六 8:00-12:00</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom -->
+    <div class="gold-line w-full mb-8" style="height:1px;opacity:.2"></div>
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-parchment/25">
+      <p>© 2026 济仁堂中医诊所 · 保留所有权利</p>
+      <p>浙ICP备XXXXXXXX号-1 · 浙公网安备XXXXXXXXXXXXX号</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ JAVASCRIPT ============ -->
+<script>
+// --- Scroll Reveal ---
+const revealEls = document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale');
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); }});
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+revealEls.forEach(el => revealObs.observe(el));
+
+// --- Navbar scroll ---
+const navbar = document.getElementById('navbar');
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+  if (y > 60) {
+    navbar.style.background = 'rgba(251,247,240,.95)';
+    navbar.style.backdropFilter = 'blur(12px)';
+    navbar.style.boxShadow = '0 1px 20px rgba(62,39,35,.06)';
+    navbar.querySelectorAll('.nav-link').forEach(l => l.style.color = '#3E2723');
+  } else {
+    navbar.style.background = 'transparent';
+    navbar.style.backdropFilter = 'none';
+    navbar.style.boxShadow = 'none';
+    navbar.querySelectorAll('.nav-link').forEach(l => l.style.color = '');
+  }
+  lastScroll = y;
+});
+
+// --- Mobile Menu ---
+const menuBtn = document.getElementById('menuBtn');
+const mobileMenu = document.getElementById('mobileMenu');
+const menuLines = menuBtn.querySelectorAll('.menu-line');
+let menuOpen = false;
+menuBtn.addEventListener('click', () => {
+  menuOpen = !menuOpen;
+  mobileMenu.classList.toggle('open', menuOpen);
+  if (menuOpen) {
+    menuLines[0].style.transform = 'rotate(45deg) translate(4px,4px)';
+    menuLines[1].style.opacity = '0';
+    menuLines[2].style.transform = 'rotate(-45deg) translate(2px,-2px)';
+    menuLines[2].style.width = '1.5rem';
+  } else {
+    menuLines[0].style.transform = '';
+    menuLines[1].style.opacity = '';
+    menuLines[2].style.transform = '';
+    menuLines[2].style.width = '';
+  }
+});
+// Close on link click
+mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  menuOpen = false;
+  mobileMenu.classList.remove('open');
+  menuLines[0].style.transform = '';
+  menuLines[1].style.opacity = '';
+  menuLines[2].style.transform = '';
+  menuLines[2].style.width = '';
+}));
+
+// --- Back to Top ---
+const backTop = document.getElementById('backTop');
+window.addEventListener('scroll', () => {
+  backTop.classList.toggle('visible', window.scrollY > 600);
+});
+backTop.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// --- Toast ---
+function showToast(msg, type = 'success') {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.className = 'toast px-6 py-3 rounded-lg shadow-xl font-sans text-sm ' +
+    (type === 'success' ? 'bg-ink text-parchment' : 'bg-vermillion text-parchment');
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// --- Form Validation & Submit ---
+const form = document.getElementById('appointForm');
+form.addEventListener('submit', function(e) {
+  e.preventDefault();
+  let valid = true;
+
+  // Clear errors
+  form.querySelectorAll('.err-msg').forEach(p => { p.textContent = ''; p.classList.add('hidden'); });
+  form.querySelectorAll('input,select').forEach(el => el.style.borderColor = '');
+
+  // Name
+  const name = form.name;
+  if (!name.value.trim()) {
+    showErr(name, '请输入您的姓名');
+    valid = false;
+  }
+
+  // Phone
+  const phone = form.phone;
+  if (!phone.value.trim()) {
+    showErr(phone, '请输入手机号码');
+    valid = false;
+  } else if (!/^1[3-9]\d{9}$/.test(phone.value.trim())) {
+    showErr(phone, '请输入正确的11位手机号码');
+    valid = false;
+  }
+
+  // Department
+  const dept = form.department;
+  if (!dept.value) {
+    showErr(dept, '请选择科室');
+    valid = false;
+  }
+
+  // Date
+  const date = form.date;
+  if (!date.value) {
+    showErr(date, '请选择就诊日期');
+    valid = false;
+  } else {
+    const d = new Date(date.value);
+    const today = new Date(); today.setHours(0,0,0,0);
+    if (d < today) {
+      showErr(date, '请选择今天或之后的日期');
+      valid = false;
+    }
+  }
+
+  if (!valid) return;
+
+  // Show loading
+  const btnText = document.getElementById('btnText');
+  const btnLoading = document.getElementById('btnLoading');
+  const submitBtn = document.getElementById('submitBtn');
+  btnText.classList.add('hidden');
+  btnLoading.classList.remove('hidden');
+  submitBtn.disabled = true;
+
+  // Simulate submit
+  setTimeout(() => {
+    btnText.classList.remove('hidden');
+    btnLoading.classList.add('hidden');
+    submitBtn.disabled = false;
+    form.reset();
+    showToast('预约提交成功！我们将在24小时内与您联系确认。');
+  }, 1500);
+});
+
+function showErr(el, msg) {
+  el.style.borderColor = '#A63D2B';
+  const p = el.parentElement.querySelector('.err-msg');
+  if (p) {
+    p.textContent = msg;
+    p.classList.remove('hidden');
+  }
+}
+
+// Real-time validation on blur
+form.querySelectorAll('input,select').forEach(el => {
+  el.addEventListener('blur', function() {
+    const p = this.parentElement.querySelector('.err-msg');
+    if (this.required && !this.value.trim()) {
+      this.style.borderColor = '#A63D2B';
+    } else {
+      this.style.borderColor = '';
+      if (p) { p.textContent = ''; p.classList.add('hidden'); }
+    }
+  });
+  el.addEventListener('input', function() {
+    this.style.borderColor = '';
+    const p = this.parentElement.querySelector('.err-msg');
+    if (p) { p.textContent = ''; p.classList.add('hidden'); }
+  });
+});
+
+// Set min date for date input
+const dateInput = form.querySelector('input[type="date"]');
+if (dateInput) {
+  const today = new Date().toISOString().split('T')[0];
+  dateInput.setAttribute('min', today);
+}
+</script>
 </body>
 </html>
